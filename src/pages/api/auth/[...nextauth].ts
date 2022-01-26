@@ -1,6 +1,8 @@
 import NextAuth from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
 
+import { UserRepository } from '../../../services/UserRepository'
+
 export default NextAuth({
   providers: [
     GithubProvider({
@@ -13,4 +15,16 @@ export default NextAuth({
       }
     }),
   ],
+  secret: process.env.NEXT_AUTH_SECRET,
+  callbacks: {
+    async signIn({ user }) {
+      try {
+        const userRepo = new UserRepository()
+        await userRepo.saveUser(user.email)
+        return true
+      } catch (error) {
+        return false
+      }
+    },
+  }
 })
