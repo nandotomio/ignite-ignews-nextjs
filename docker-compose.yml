@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    command: listen --forward-to http://host.docker.internal:3000/api/webhooks
+    environment:
+      - STRIPE_API_KEY=${STRIPE_TEST_API_KEY}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
