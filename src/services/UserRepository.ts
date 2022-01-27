@@ -28,6 +28,17 @@ export class UserRepository implements SaveUser {
     )
   }
 
+  async getUserByStripeCustomerId(stripeCustomerId: string): Promise<User> {
+    return await this.fauna.query<User>(
+      q.Get(
+        q.Match(
+          q.Index('users_by_stripe_customer_id'),
+          stripeCustomerId
+        )
+      )
+    )
+  }
+
   async saveUserStripeCustomerId(userId: string, stripeCustomerId: string): Promise<void> {
     await this.fauna.query(
       q.Update(

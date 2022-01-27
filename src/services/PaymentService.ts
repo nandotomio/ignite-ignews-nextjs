@@ -55,4 +55,12 @@ export class PaymentService implements GetSubscriptionPrice {
     })
     return checkoutSession.id
   }
+
+  createStripeEvent (buffer: Buffer, secret: string): Stripe.Event {
+    return this.stripe.webhooks.constructEvent(buffer, secret, process.env.STRIPE_WEBHOOK_SECRET)
+  }
+
+  async getSubscription (subscriptionId: string) {
+    return await this.stripe.subscriptions.retrieve(subscriptionId)
+  }
 }
